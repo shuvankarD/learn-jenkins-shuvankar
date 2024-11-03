@@ -6,6 +6,7 @@ pipeline {
             steps {
                 sh 'echo "Hello Jenkins"'
                 sh 'whoami'
+                sh 'dashbabu'
             }
         }
     }
