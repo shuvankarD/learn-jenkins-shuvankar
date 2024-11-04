@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Test') {
             steps{               
-                    ech 'Test Stage'
+                    echo 'Test Stage'
                     sh 'test -f index.html'
                 }
             }
