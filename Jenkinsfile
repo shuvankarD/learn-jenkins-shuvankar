@@ -20,5 +20,11 @@ pipeline {
                 '''
             }
         }
+        stage('Test') {
+            steps{               
+                    ech 'Test Stage'
+                    sh 'test -f index.html'
+                }
+            }
     }
 }
