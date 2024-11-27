@@ -16,6 +16,7 @@ pipeline {
             }
             steps {
                 sh '''
+                    echo 'Small changes'
                     ls -la
                     node --version
                     npm --version
@@ -26,7 +27,7 @@ pipeline {
             }
         }
         
-        stage("Tests"){
+        stage('Tests'){
             parallel{
                 
                stage('Unit Test') {
