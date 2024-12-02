@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-            stage('Build') {
+        stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -104,7 +104,7 @@ pipeline {
         stage('Approved') {
             steps {
                 
-                timeout(1) {
+                timeout(time:15, unit: 'Mintues') {
                  input message: 'Ready to Deploy?', ok: 'Stimmt ! Bitte Deploy...'
                 }
             }   
