@@ -40,7 +40,7 @@ pipeline {
 
                     steps {
                      sh '''
-                        #test -f build/index.html
+                        test -f build/index.html
                         npm test
                       '''
                     }
@@ -80,31 +80,8 @@ pipeline {
             }
 
         }    
-
+ 
         stage('Deploy Staging') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    npm install netlify-cli node-jq
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to site ID: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
-                   
-                '''    
-                script{
-                   env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout:true)
-                }
-            }  
-        }
-
-        
-        stage('E2E Staging') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -118,10 +95,13 @@ pipeline {
                     
             steps {
                 sh '''
-                npm install serve
-                node_modules/.bin/serve -s build &
-                sleep 10
-                npx playwright test --reporter=html
+                    npm install netlify-cli node-jq
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to site ID: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
+                    CI_ENVIRONMENT_URL = $(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
+                    npx playwright test --reporter=html
                 '''
             }
 
@@ -155,14 +135,14 @@ pipeline {
                     
             steps {
                 sh '''
-                node -version
-                npm install netlify-cli 
-                npm install netlify-cli 
-                node_modules/.bin/netlify --version
-                echo "Deploying to site ID: $NETLIFY_SITE_ID"
-                node_modules/.bin/netlify status
-                node_modules/.bin/netlify deploy --dir=build --prod
-                npx playwright test --reporter=html
+                    node --version
+                    npm install netlify-cli 
+                    node_modules/.bin/netlify --version
+                    echo "Deploying to site ID: $NETLIFY_SITE_ID"
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --prod
+                    npx playwright test --reporter=html
+
                 '''
             }
 
