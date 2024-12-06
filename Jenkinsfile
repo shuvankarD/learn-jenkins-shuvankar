@@ -88,6 +88,10 @@ pipeline {
                     reuseNode true
                 }
             }
+
+            environment{  
+                CI_ENVIRONMENT_URL = 'This is satge experiement'
+            }
                     
             steps {
                 sh '''
