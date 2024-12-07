@@ -4,7 +4,7 @@ pipeline {
     environment{
         NETLIFY_SITE_ID = 'a9728843-2e0d-41dd-9e01-d32769d725c1'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-        REACT_APP_VERSION = '1.2.3'
+        REACT_APP_VERSION = "1.0.$BUILD_ID"
     }
 
     stages {
@@ -98,7 +98,7 @@ pipeline {
                 sh '''
                     npm install netlify-cli node-jq
                     node_modules/.bin/netlify --version
-                    echo "Deploying to site ID: $NETLIFY_SITE_ID"
+                    echo 'Deploying to site ID: $NETLIFY_SITE_ID'
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
                     CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
